@@ -1,0 +1,72 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class Musician {
+  final String name;
+  final String biography;
+
+  Musician({required this.name, required this.biography});
+}
+
+class MyApp extends StatelessWidget {
+  final List<Musician> musicians = [
+    Musician(
+      name: "John Lennon",
+      biography: "John Winston Ono Lennon was an English singer, songwriter, and peace activist who co-founded the Beatles, the most commercially successful band in the history of popular music."
+    ),
+    Musician(
+      name: "Bob Marley",
+      biography: "Robert Nesta Marley, OM, was a Jamaican singer, songwriter, and musician. Considered one of the pioneers of reggae, his musical career was marked by blending elements of reggae, ska, and rocksteady, as well as his distinctive vocal and songwriting style."
+    ),
+    // Add more musicians as needed
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Ohimusic Biographies'),
+        ),
+        body: ListView.builder(
+          itemCount: musicians.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(musicians[index].name),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MusicianDetailScreen(musician: musicians[index]),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class MusicianDetailScreen extends StatelessWidget {
+  final Musician musician;
+
+  MusicianDetailScreen({required this.musician});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(musician.name),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(musician.biography),
+      ),
+    );
+  }
+}
