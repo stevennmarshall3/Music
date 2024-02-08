@@ -7,19 +7,38 @@ void main() {
 class Musician {
   final String name;
   final String biography;
+  final String imageUrl;
+  final String birthdate;
+  final List<String> genres;
 
-  Musician({required this.name, required this.biography});
+  Musician({
+    required this.name,
+    required this.biography,
+    required this.imageUrl,
+    required this.birthdate,
+    required this.genres,
+  });
 }
 
 class MyApp extends StatelessWidget {
   final List<Musician> musicians = [
     Musician(
       name: "John Lennon",
-      biography: "John Winston Ono Lennon was an English singer, songwriter, and peace activist who co-founded the Beatles, the most commercially successful band in the history of popular music."
+      biography:
+          "John Winston Ono Lennon was an English singer, songwriter, and peace activist who co-founded the Beatles, the most commercially successful band in the history of popular music.",
+      imageUrl:
+          "https://your-image-url.com/john_lennon.jpg",
+      birthdate: "October 9, 1940",
+      genres: ["Rock", "Pop"],
     ),
     Musician(
       name: "Bob Marley",
-      biography: "Robert Nesta Marley, OM, was a Jamaican singer, songwriter, and musician. Considered one of the pioneers of reggae, his musical career was marked by blending elements of reggae, ska, and rocksteady, as well as his distinctive vocal and songwriting style."
+      biography:
+          "Robert Nesta Marley, OM, was a Jamaican singer, songwriter, and musician. Considered one of the pioneers of reggae, his musical career was marked by blending elements of reggae, ska, and rocksteady, as well as his distinctive vocal and songwriting style.",
+      imageUrl:
+          "https://your-image-url.com/bob_marley.jpg",
+      birthdate: "February 6, 1945",
+      genres: ["Reggae"],
     ),
     // Add more musicians as needed
   ];
@@ -35,12 +54,17 @@ class MyApp extends StatelessWidget {
           itemCount: musicians.length,
           itemBuilder: (context, index) {
             return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(musicians[index].imageUrl),
+              ),
               title: Text(musicians[index].name),
+              subtitle: Text("Genres: ${musicians[index].genres.join(', ')}"),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MusicianDetailScreen(musician: musicians[index]),
+                    builder: (context) =>
+                        MusicianDetailScreen(musician: musicians[index]),
                   ),
                 );
               },
@@ -65,7 +89,23 @@ class MusicianDetailScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Text(musician.biography),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.network(
+              musician.imageUrl,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 16),
+            Text("Birthdate: ${musician.birthdate}"),
+            SizedBox(height: 8),
+            Text("Genres: ${musician.genres.join(', ')}"),
+            SizedBox(height: 16),
+            Text(musician.biography),
+          ],
+        ),
       ),
     );
   }
