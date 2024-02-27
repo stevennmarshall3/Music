@@ -10,6 +10,7 @@ class Musician {
   final String imageUrl;
   final String birthdate;
   final List<String> genres;
+  final List<String> popularSongs;
 
   Musician({
     required this.name,
@@ -17,6 +18,7 @@ class Musician {
     required this.imageUrl,
     required this.birthdate,
     required this.genres,
+    required this.popularSongs,
   });
 }
 
@@ -26,19 +28,19 @@ class MyApp extends StatelessWidget {
       name: "John Lennon",
       biography:
           "John Winston Ono Lennon was an English singer, songwriter, and peace activist who co-founded the Beatles, the most commercially successful band in the history of popular music.",
-      imageUrl:
-          "https://your-image-url.com/john_lennon.jpg",
+      imageUrl: "https://your-image-url.com/john_lennon.jpg",
       birthdate: "October 9, 1940",
       genres: ["Rock", "Pop"],
+      popularSongs: ["Imagine", "Let It Be", "Hey Jude"],
     ),
     Musician(
       name: "Bob Marley",
       biography:
           "Robert Nesta Marley, OM, was a Jamaican singer, songwriter, and musician. Considered one of the pioneers of reggae, his musical career was marked by blending elements of reggae, ska, and rocksteady, as well as his distinctive vocal and songwriting style.",
-      imageUrl:
-          "https://your-image-url.com/bob_marley.jpg",
+      imageUrl: "https://your-image-url.com/bob_marley.jpg",
       birthdate: "February 6, 1945",
       genres: ["Reggae"],
+      popularSongs: ["One Love", "No Woman, No Cry", "Redemption Song"],
     ),
     // Add more musicians as needed
   ];
@@ -49,6 +51,14 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: Text('Ohimusic Biographies'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(context: context, delegate: MusicianSearch(musicians));
+              },
+            ),
+          ],
         ),
         body: ListView.builder(
           itemCount: musicians.length,
@@ -103,10 +113,76 @@ class MusicianDetailScreen extends StatelessWidget {
             SizedBox(height: 8),
             Text("Genres: ${musician.genres.join(', ')}"),
             SizedBox(height: 16),
+            Text("Popular Songs:"),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: musician.popularSongs
+                  .map((song) => Text("- $song"))
+                  .toList(),
+            ),
+            SizedBox(height: 16),
             Text(musician.biography),
           ],
         ),
       ),
+    );
+  }
+}
+
+class MusicianSearch extends SearchDelegate<Musician> {
+  final List<Musician> musicians;
+
+  MusicianSearch(this.musicians);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return buildSuggestions(context);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? musicians
+        : musicians.where((musician) =>
+            musician.name.toLowerCase().startsWith(query.toLowerCase())).toList();
+
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(suggestionList[index].name),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MusicianDetailScreen(musician: suggestionList[index]),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
