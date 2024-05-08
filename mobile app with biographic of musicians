@@ -11,6 +11,7 @@ class Musician {
   final String birthdate;
   final List<String> genres;
   final List<String> popularSongs;
+  final String coast; // East Coast or West Coast
 
   Musician({
     required this.name,
@@ -19,6 +20,7 @@ class Musician {
     required this.birthdate,
     required this.genres,
     required this.popularSongs,
+    required this.coast,
   });
 }
 
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
       birthdate: "October 9, 1940",
       genres: ["Rock", "Pop"],
       popularSongs: ["Imagine", "Let It Be", "Hey Jude"],
+      coast: "West Coast",
     ),
     Musician(
       name: "Bob Marley",
@@ -41,6 +44,27 @@ class MyApp extends StatelessWidget {
       birthdate: "February 6, 1945",
       genres: ["Reggae"],
       popularSongs: ["One Love", "No Woman, No Cry", "Redemption Song"],
+      coast: "West Coast",
+    ),
+    Musician(
+      name: "The Notorious B.I.G.",
+      biography:
+          "Christopher George Latore Wallace, better known by his stage names the Notorious B.I.G., Biggie Smalls, or simply Biggie, was an American rapper and songwriter. Rooted in the New York rap scene and gangsta rap traditions, he is considered one of the greatest rappers of all time.",
+      imageUrl: "https://your-image-url.com/biggie_smalls.jpg",
+      birthdate: "May 21, 1972",
+      genres: ["Hip Hop"],
+      popularSongs: ["Juicy", "Big Poppa", "Hypnotize"],
+      coast: "East Coast",
+    ),
+    Musician(
+      name: "Tupac Shakur",
+      biography:
+          "Tupac Amaru Shakur, known professionally as 2Pac or Makaveli, was an American rapper, actor, and activist. He is widely considered one of the greatest rappers of all time.",
+      imageUrl: "https://your-image-url.com/tupac_shakur.jpg",
+      birthdate: "June 16, 1971",
+      genres: ["Hip Hop"],
+      popularSongs: ["California Love", "Changes", "Dear Mama"],
+      coast: "West Coast",
     ),
     // Add more musicians as needed
   ];
@@ -68,7 +92,13 @@ class MyApp extends StatelessWidget {
                 backgroundImage: NetworkImage(musicians[index].imageUrl),
               ),
               title: Text(musicians[index].name),
-              subtitle: Text("Genres: ${musicians[index].genres.join(', ')}"),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Genres: ${musicians[index].genres.join(', ')}"),
+                  Text("Coast: ${musicians[index].coast}"),
+                ],
+              ),
               onTap: () {
                 Navigator.push(
                   context,
@@ -112,6 +142,8 @@ class MusicianDetailScreen extends StatelessWidget {
             Text("Birthdate: ${musician.birthdate}"),
             SizedBox(height: 8),
             Text("Genres: ${musician.genres.join(', ')}"),
+            SizedBox(height: 8),
+            Text("Coast: ${musician.coast}"),
             SizedBox(height: 16),
             Text("Popular Songs:"),
             Column(
